@@ -22,18 +22,18 @@ public class Assigning_examBUS {
                 return assigning_examList;
         }
 
-//        public boolean addAssigning_exam(Assigning_examDTO cls) {
-//                try {
-//                        if (assigning_examDAO.isAssigning_examIdExist(cls.getAssigning_exam_id())) {
-//                                return false;
-//                        } else {
-//                                return assigning_examDAO.addAssigning_exam(cls);
-//                        }
-//                } catch (Exception e) {
-//                        e.printStackTrace();
-//                        return false;
-//                }
-//        }
+        public boolean addAssigning_exam(Assigning_examDTO cls) {
+                try {
+                        if (assigning_examDAO.isAssigning_examIdExist(cls.getSub_id(), cls.getTea_id())) {
+                                return false;
+                        } else {
+                                return assigning_examDAO.addAssigning_exam(cls);
+                        }
+                } catch (Exception e) {
+                        e.printStackTrace();
+                        return false;
+                }
+        }
 //
 //        public boolean updateAssigning_exam(Assigning_examDTO cls) {
 //                try {

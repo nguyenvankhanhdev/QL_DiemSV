@@ -1,7 +1,11 @@
 package DAO;
 
 import DTO.StudentsDTO;
+import DTO.StudyRecordDTO;
 
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -10,6 +14,7 @@ import java.util.ArrayList;
 public class StudentsDAO {
 
         private ArrayList<StudentsDTO> students;
+
         public StudentsDAO() {
                 students = new ArrayList<>();
         }
@@ -57,6 +62,7 @@ public class StudentsDAO {
                 }
                 return false;
         }
+
         public boolean addStudent(StudentsDTO stu) {
                 try {
                         MysqlAccess helper = new MysqlAccess();
@@ -79,6 +85,7 @@ public class StudentsDAO {
                         return false;
                 }
         }
+
         public boolean updateStudent(StudentsDTO stu) {
                 try {
                         MysqlAccess helper = new MysqlAccess();
@@ -101,7 +108,8 @@ public class StudentsDAO {
                         return false;
                 }
         }
-        public  boolean deleteStudent(String stuId) {
+
+        public boolean deleteStudent(String stuId) {
                 try {
                         MysqlAccess helper = new MysqlAccess();
                         helper.open();
@@ -115,4 +123,55 @@ public class StudentsDAO {
                         return false;
                 }
         }
+
+        public StudentsDTO searchStudent(String stuId) {
+                StudentsDTO stu = null;
+                try {
+                        MysqlAccess helper = new MysqlAccess();
+                        helper.open();
+                        CallableStatement stmt = helper.getConnection().prepareCall("{call findIDStudent(?)}");
+                        stmt.setString(1, stuId);
+                        ResultSet rs = stmt.executeQuery();
+                        if (rs.next()) {
+                                stu = new StudentsDTO();
+                                stu.setStu_id(rs.getString("stu_id"));
+                                stu.setStu_name(rs.getString("stu_name"));
+                                stu.setStu_day_entry(rs.getDate("stu_day_entry"));
+                                stu.setStu_semester(rs.getInt("stu_semester"));
+                                stu.setStu_sex(rs.getString("stu_sex"));
+                                stu.setDob(rs.getDate("stu_dob"));
+                                stu.setAddress(rs.getString("stu_address"));
+                                stu.setAca_id(rs.getString("aca_name"));
+                                stu.setClass_id(rs.getString("class_name"));
+                        }
+                } catch (Exception ex) {
+                        System.out.println(ex.getMessage());
+                }
+                return stu;
+        }
+
+        public ArrayList<StudyRecordDTO> getStudyRecords(String studentId) {
+                ArrayList<StudyRecordDTO> studyRecords = new ArrayList<>();
+                try {
+                        MysqlAccess helper = new MysqlAccess();
+                        helper.open();
+                        CallableStatement stmt = helper.getConnection().prepareCall("{call sp_studyRecords(?)}");
+                        stmt.setString(1, studentId);
+                        ResultSet rs = stmt.executeQuery();
+                        while (rs.next()) {
+                                StudyRecordDTO record = new StudyRecordDTO();
+                                record.setStu_id(rs.getString("stu_id"));
+                                record.setStu_name(rs.getString("stu_name"));
+                                record.setSub_name(rs.getString("sub_name"));
+                                record.setRes_time(rs.getInt("res_time"));
+                                record.setRes_score(rs.getFloat("res_score"));
+                                studyRecords.add(record);
+                        }
+                        helper.close();
+                } catch (Exception ex) {
+                        System.out.println(ex.getMessage());
+                }
+                return studyRecords;
+        }
+
 }

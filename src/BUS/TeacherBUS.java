@@ -11,7 +11,6 @@ public class TeacherBUS {
                 teacherDAO = new TeacherDAO();
         }
         public ArrayList<TeacherDTO> getTeachersByAcademic(String academicID) {
-
                 ArrayList<TeacherDTO> teacherList = new ArrayList<>();
                 try{
                         teacherList = teacherDAO.getTeachersByAcademic(academicID);
@@ -20,7 +19,4 @@ public class TeacherBUS {
                 }
                 return teacherList;
         }
-
-
-
 }

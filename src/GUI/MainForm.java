@@ -180,6 +180,13 @@ public class MainForm extends JFrame {
                                 aeg.setVisible(true);
                         }
                 });
+                chkHocBa.addActionListener(new ActionListener() {
+                        public void actionPerformed(ActionEvent e) {
+                                StudyRecordsGUI srg = new StudyRecordsGUI();
+                                desktopPane.add(srg);
+                                srg.setVisible(true);
+                        }
+                });
         }
 
 

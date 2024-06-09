@@ -11,6 +11,7 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -109,8 +110,14 @@ public class Assigning_examGUI extends JInternalFrame implements ActionListener 
 
                 table = new JTable(tableModel);
                 JScrollPane scrollPane = new JScrollPane(table);
-                scrollPane.setBounds(350, 20, 800, 420);
+                scrollPane.setBounds(350, 20, 600, 420);
                 getContentPane().add(scrollPane);
+                DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+                centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+
+                for (int i = 0; i < table.getColumnCount(); i++) {
+                        table.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+                }
                 table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
                         @Override
                         public void valueChanged(ListSelectionEvent e) {
@@ -158,6 +165,7 @@ public class Assigning_examGUI extends JInternalFrame implements ActionListener 
                 }
 
         }
+
         private void loadTeacher(String departmentID) {
                 TeacherBUS teacherBUS = new TeacherBUS();
                 ArrayList<DTO.TeacherDTO> teacherList = teacherBUS.getTeachersByAcademic(departmentID);
@@ -185,6 +193,22 @@ public class Assigning_examGUI extends JInternalFrame implements ActionListener 
 
         @Override
         public void actionPerformed(ActionEvent e) {
+                if (e.getSource() == btnAdd) {
+                        addAssigning_exam();
+                }
 
+        }
+
+        private void addAssigning_exam() {
+                Assigning_examDTO Assigning_exam = new Assigning_examDTO();
+                ComboItem selectedSubject = (ComboItem) cbSubjectID.getSelectedItem();
+                ComboItem selectedTeacher = (ComboItem) cbTeacherID.getSelectedItem();
+                boolean success = Assigning_examBUS.addAssigning_exam(new Assigning_examDTO(selectedSubject.getId(), selectedTeacher.getId()));
+                if (success) {
+                        JOptionPane.showMessageDialog(this, "Assigning_exam added successfully");
+                        tableModel.addRow(new Object[]{selectedSubject.getId(), selectedTeacher.getId()});
+                } else {
+                        JOptionPane.showMessageDialog(this, "Assigning_exam already exists");
+                }
         }
 }

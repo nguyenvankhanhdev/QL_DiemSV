@@ -7,6 +7,7 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -167,6 +168,12 @@ public class StudentsGUI extends JInternalFrame implements ActionListener {
                 JScrollPane scrollPane = new JScrollPane(table);
                 scrollPane.setBounds(350, 20, 800, 420);
                 getContentPane().add(scrollPane);
+                DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+                centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+
+                for (int i = 0; i < table.getColumnCount(); i++) {
+                        table.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+                }
                 table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
                         public void valueChanged(ListSelectionEvent event) {
                                 txtStudentID.enable(false);
@@ -260,10 +267,8 @@ public class StudentsGUI extends JInternalFrame implements ActionListener {
                 student.setAddress(txtStudentAddress.getText());
                 ComboItem selectedAcademic = (ComboItem) cbAcaId.getSelectedItem();
                 student.setAca_id(selectedAcademic.getId());
-
                 ComboItem selectedClass = (ComboItem) cbClassId.getSelectedItem();
                 student.setClass_id(selectedClass.getId());
-
                 boolean success = studentsBUS.addStudent(student);
                 if (success) {
                         JOptionPane.showMessageDialog(this, "Add student successfully");
@@ -273,7 +278,6 @@ public class StudentsGUI extends JInternalFrame implements ActionListener {
                         JOptionPane.showMessageDialog(this, "Add student failed");
                 }
         }
-
         private void updateStudent() {
                 StudentsDTO student = new StudentsDTO();
                 student.setStu_id(txtStudentID.getText());
@@ -320,5 +324,6 @@ public class StudentsGUI extends JInternalFrame implements ActionListener {
                 txtStudentDOB.setText("");
                 txtStudentAddress.setText("");
         }
+
 
 }
